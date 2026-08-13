@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data
+data/
+*.pt
+
+# OS and IDE
+.DS_Store
+.vscode/
