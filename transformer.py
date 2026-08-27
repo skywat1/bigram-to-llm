@@ -22,7 +22,7 @@ class MultiheadAttention(nn.Module):
         Args:
             d_model (int): Length of the hidden vector after embedding
             num_heads (int): The number of attention heads
-                preconditon: must perfectly divide d_model
+                precondition: must perfectly divide d_model
         """
         super().__init__()
         
@@ -41,11 +41,11 @@ class MultiheadAttention(nn.Module):
     def forward(self, hidden):
         """
         Args:
-            x: Input tensor of shape (batch_size, seq_len, d_model) that contains
-            the hidden states for each token
+            hidden: Input tensor of shape (batch_size, seq_len, d_model) that
+            contains the hidden states for each token
             
         Returns:
-            A tensor of shape (batch_size, seq_len, vocab_size) of logits
+            A tensor of shape (batch_size, seq_len, d_model) of hidden states
         """
         batch_size, seq_len, _ = hidden.shape
         
@@ -92,6 +92,12 @@ class MultiheadAttention(nn.Module):
 
 class MLP(nn.Module):
     def __init__(self, d_model, hidden_dim=None):
+        """
+        Args: 
+            d_model (int): Length of the hidden vector after embedding
+            hidden_dim (int): The width of the hidden layer
+                defaults to 4 * d_model
+        """
         super().__init__()
         
         if hidden_dim is None:
@@ -101,6 +107,14 @@ class MLP(nn.Module):
         self.proj = nn.Linear(hidden_dim, d_model, bias=False)
         
     def forward(self, x):
+        """
+        Args:
+            x: Input tensor of shape (batch_size, seq_len, d_model) that
+            contains the hidden states for each token
+            
+        Returns:
+            A tensor of shape (batch_size, seq_len, d_model) of hidden states
+        """
         x = self.fc(x)
         x = F.gelu(x)
         x = self.proj(x)
@@ -111,11 +125,9 @@ class TransformerBlock(nn.Module):
     def __init__(self, d_model, num_heads):
         """
         Args: 
-            vocab_size (int): Vocabulary size
             d_model (int): Length of the hidden vector after embedding
             num_heads (int): The number of attention heads
-                preconditon: must perfectly divide d_model
-            context_size (int): The max context size 
+                precondition: must perfectly divide d_model
         """
         super().__init__()
         
@@ -128,11 +140,11 @@ class TransformerBlock(nn.Module):
     def forward(self, x):
         """
         Args:
-            x: Input tensor of shape (batch_size, seq_len, d_model) that contains
-            the hidden states for each token
+            x: Input tensor of shape (batch_size, seq_len, d_model) that
+            contains the hidden states for each token
             
         Returns:
-            A tensor of shape (batch_size, seq_len, vocab_size) of logits
+            A tensor of shape (batch_size, seq_len, d_model) of hidden states
         """
         x = x + self.multihead_attention(self.ln_1(x))
         x = x + self.mlp(self.ln_2(x))
@@ -141,6 +153,11 @@ class TransformerBlock(nn.Module):
 
 class Transformer(nn.Module):
     def __init__(self, config: TransformerConfig):
+        """
+        Args: 
+            config (TransformerConfig): The model hyperparameters, holding
+                vocab_size, d_model, num_heads, num_layers and context_size
+        """
         super().__init__()
         
         # Embedding
