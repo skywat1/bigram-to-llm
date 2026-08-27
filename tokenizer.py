@@ -9,6 +9,7 @@ class CharTokenizer:
         unique_chars = sorted(list(set(corpus)))
         
         self.vocab_size = len(unique_chars)
+        self.vocabulary = unique_chars
         self.stoi = {ch: i for i, ch in enumerate(unique_chars)} 
         self.itos = {i: ch for i, ch in enumerate(unique_chars)}
         
