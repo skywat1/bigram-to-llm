@@ -4,6 +4,18 @@ import random
 
 @torch.no_grad
 def gen_tokens(model, tokenizer, tokens_to_gen, prompt=None):
+    """Streams autoregressive generation
+
+    Args:
+        model: The model to use
+        tokenizer: The tokenizer to use
+        tokens_to_gen (int): The number of tokens to generate
+        prompt (str, optional): The prompt that generation will start after. 
+            Defaults to None.
+
+    Yields:
+        str: The generated token as a string
+    """
     model.eval()
     device = next(model.parameters()).device
     
@@ -11,7 +23,6 @@ def gen_tokens(model, tokenizer, tokens_to_gen, prompt=None):
         prompt = tokenizer.vocabulary[
             random.randint(0, tokenizer.vocab_size-1)
         ]
-        tokens_to_gen -= 1
         
     prompt_tokens = tokenizer.encode(prompt).to(device)
         

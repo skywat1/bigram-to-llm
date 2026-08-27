@@ -20,11 +20,9 @@ class MultiheadAttention(nn.Module):
     def __init__(self, d_model, num_heads):
         """
         Args:
-            vocab_size (int): Vocabulary size
             d_model (int): Length of the hidden vector after embedding
             num_heads (int): The number of attention heads
                 preconditon: must perfectly divide d_model
-            context_size (int): The max context size
         """
         super().__init__()
         
@@ -43,8 +41,8 @@ class MultiheadAttention(nn.Module):
     def forward(self, hidden):
         """
         Args:
-            x: Input tensor of shape (batch_size, seq_len) that contains
-            the token ids for each token
+            x: Input tensor of shape (batch_size, seq_len, d_model) that contains
+            the hidden states for each token
             
         Returns:
             A tensor of shape (batch_size, seq_len, vocab_size) of logits
@@ -62,7 +60,7 @@ class MultiheadAttention(nn.Module):
         v = v.view(batch_size, seq_len, self.num_heads, self.head_size)
         
         # Put leading dims at the front 
-        # (batch_size, seq_len, num_heads, head_size)
+        # (batch_size, num_heads, seq_len, head_size)
         q = q.transpose(1, 2)
         k = k.transpose(1, 2)
         v = v.transpose(1, 2)
@@ -130,8 +128,8 @@ class TransformerBlock(nn.Module):
     def forward(self, x):
         """
         Args:
-            x: Input tensor of shape (batch_size, seq_len) that contains
-            the token ids for each token
+            x: Input tensor of shape (batch_size, seq_len, d_model) that contains
+            the hidden states for each token
             
         Returns:
             A tensor of shape (batch_size, seq_len, vocab_size) of logits

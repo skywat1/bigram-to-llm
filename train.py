@@ -25,6 +25,7 @@ def train_model(model, criterion, optimizer, data, config: TrainConfig):
         losses: A list of losses at each step
         seq_done: Total number of sequences trained on
     """
+    model.train()
     losses = []
     seq_done = 0
 

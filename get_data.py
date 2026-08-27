@@ -65,7 +65,7 @@ def get_batch(data, batch_size: int, seq_len: int):
         Y: a 2D tensor of shape (batch_size, seq_len) containing token IDs
     """
     n = len(data)
-    if seq_len > n:
+    if seq_len >= n:
         raise ValueError('seq_len is larger than size of corpus')
     
     start_idxs = torch.randint(n - seq_len, (batch_size,), device=data.device)

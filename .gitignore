@@ -5,8 +5,9 @@ venv/
 # Jupyter
 .ipynb_checkpoints/
 
-# Data
+# Data and artifacts
 data/
+artifacts/
 *.pt
 
 # OS and IDE
